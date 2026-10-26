@@ -40,7 +40,7 @@ public final class Config {
      * Layout cost: showing Q4 needs the 4-line media layout (pi_Type=0). When this flag is OFF the
      * track widget keeps the stock 3-line layout (pi_Type=72, big title) exactly as before.
      */
-    public static final boolean SHOW_MEDIA_PROGRESS = false;
+    public static final boolean SHOW_MEDIA_PROGRESS = true;
 
     /**
      * Push the Android Auto album cover to the instrument cluster. AID / colour Virtual Cockpit ONLY.
@@ -56,6 +56,35 @@ public final class Config {
      * Requires SHOW_MEDIA. Default OFF: experimental, verifiable only on an AID-equipped car.
      */
     public static final boolean SHOW_COVER_ART = false;
+
+    // ===== scrolling ========================================================================
+    /**
+     * Scroll an over-long Android Auto track title in the cluster media view. This is a software
+     * marquee: AAtoKombi sends a moving character window because the BAP property has no portable
+     * "scroll" flag. Works on MQB, PQ and AID clusters; the separate widths below account for the
+     * different layouts. false keeps the current full-title behaviour and lets the cluster clip it.
+     */
+    public static final boolean SCROLL_MEDIA_TITLE = true;
+
+    /**
+     * Scroll an over-long next-road name. Covers both outputs: the native navsd Navigation page on a
+     * navigation-capable cluster and the text navigation fallback in the media page.
+     */
+    public static final boolean SCROLL_NAV_STREET = true;
+
+    /** One character step every N milliseconds. 250..500 ms is the useful range on real clusters. */
+    public static final int SCROLL_STEP_MS = 350;
+
+    /** Hold the complete beginning and the final window before wrapping to the start. */
+    public static final int SCROLL_EDGE_PAUSE_MS = 1400;
+
+    /* Character windows are deliberately conservative; cluster fonts are proportional. Tune and
+     * rebuild if a particular cluster can show more. AID uses the MQB audiosd path. */
+    public static final int SCROLL_MEDIA_TITLE_CHARS_MQB = 18;
+    public static final int SCROLL_MEDIA_TITLE_CHARS_PQ = 20;
+    public static final int SCROLL_NAV_STREET_CHARS_MQB_NAV = 24;
+    public static final int SCROLL_NAV_STREET_CHARS_MQB_MEDIA = 28;
+    public static final int SCROLL_NAV_STREET_CHARS_PQ = 20;
 
     // Both SHOW_NAV and SHOW_MEDIA false -> AAtoKombi feeds nothing to the cluster (stock label,
     // stock navsd).

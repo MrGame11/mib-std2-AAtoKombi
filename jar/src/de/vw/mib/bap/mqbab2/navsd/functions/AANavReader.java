@@ -1,6 +1,7 @@
 package de.vw.mib.bap.mqbab2.navsd.functions;
 
 import de.aatokombi.Config;
+import de.aatokombi.TextScroller;
 import de.adi961.miblogger.MIBLogger;
 import de.vw.mib.asl.framework.internal.framework.ServiceManager;
 import de.vw.mib.asl.internal.androidauto.target.NavigationHandler;
@@ -51,6 +52,11 @@ public final class AANavReader implements Runnable {
 
     private final NavigationHandler handler;   // media path only; may be null on a nav-capable unit
     private Timer timer;
+    private Timer scrollTimer;
+    private final TextScroller streetScroller = new TextScroller();
+    private boolean streetActive = false;
+    private boolean streetOnNavsd = false;
+    private boolean streetIsRerouting = false;
 
     private long lastSeq = -1L;
     private int  lastStatus = -1;
@@ -74,6 +80,17 @@ public final class AANavReader implements Runnable {
             instance.timer = ServiceManager.timerManager.createTimer(
                     "AATOKOMBI_NAV_POLL", POLL_MS, true, instance, Timer.TIMER_THREAD_INVOKER);
             instance.timer.start();
+            if (Config.SCROLL_NAV_STREET) {
+                try {
+                    instance.scrollTimer = ServiceManager.timerManager.createTimer(
+                            "AATOKOMBI_NAV_SCROLL", scrollStepMs(), true, new Runnable() {
+                                public void run() { instance.scrollStreetOnce(); }
+                            }, Timer.TIMER_THREAD_INVOKER);
+                    instance.scrollTimer.start();
+                } catch (Throwable t) {
+                    MIBLogger.getInstance().error("AANavReader street-scroll timer start failed: " + t);
+                }
+            }
             MIBLogger.getInstance().info("AANavReader started, polling " + PATH);
         } catch (Throwable t) {
             // If the framework timer isn't available yet, leave started=false so a later call retries.
@@ -191,15 +208,64 @@ public final class AANavReader implements Runnable {
         String distText = taggedLine(lines, '3');  // phone-rendered distance, 1.7 only; null on 1.3
         applyDestination(taggedLine(lines, '4'));  // distance/time to destination, 1.7 only
 
-        // Router: one parse, exactly one output, chosen by the runtime cluster type.
-        if (navCapable()) {
-            publishNavsd(event, side, angle, number, streetFor(rerouting, road), dist, time);
+        // Router: one parse, exactly one output, chosen by the runtime cluster type. The scroller
+        // owns the raw road separately, so its independent timer can refresh either output even when
+        // the phone sends no new maneuver frame (for example while stopped at a light).
+        boolean toNavsd = navCapable();
+        String rawStreet = streetFor(rerouting, road);
+        streetOnNavsd = toNavsd;
+        streetIsRerouting = rerouting;
+        streetActive = true;
+        streetScroller.setText(rawStreet, streetWidth(toNavsd), System.currentTimeMillis(),
+                Config.SCROLL_EDGE_PAUSE_MS);
+        String displayStreet = Config.SCROLL_NAV_STREET ? streetScroller.getVisible() : rawStreet;
+        if (toNavsd) {
+            publishNavsd(event, side, angle, number, displayStreet, dist, time);
         } else {
             if (statusEdge && handler != null) {
                 try { handler.navigationFocus(Constants.NAVFOCUS_PROJECTED); } catch (Throwable t) {}
             }
-            publishMedia(event, side, number, streetFor(rerouting, road), dist, distText);
+            publishMedia(event, side, number, displayStreet, dist, distText);
         }
+    }
+
+    /** Advance only the road-name property; no maneuver/distance BAP traffic is repeated. */
+    private void scrollStreetOnce() {
+        try {
+            if (!Config.SCROLL_NAV_STREET || !streetActive || cleared) return;
+            // In the media fallback, lane guidance temporarily owns the street row. Freeze the road
+            // at its current position so it resumes predictably when the next frame removes lanes.
+            if (!streetOnNavsd) {
+                String lanes = laneRow(NavState.lanes);
+                if (lanes.length() > 0 && !streetIsRerouting) return;
+            }
+            if (!streetScroller.advance(System.currentTimeMillis(), scrollStepMs(),
+                    Config.SCROLL_EDGE_PAUSE_MS)) return;
+
+            String street = streetScroller.getVisible();
+            if (streetOnNavsd) {
+                NavState.street = street;
+                TurnToInfo.poke();
+                de.vw.mib.bap.mqbpq.navsd.functions.TurnToInfo.poke();
+            } else {
+                CurrentStationInfo.navSecondary = street;
+                CurrentStationInfo.pokeNav();
+            }
+        } catch (Throwable t) {
+            // A display convenience must never disturb route guidance or the HMI timer thread.
+        }
+    }
+
+    private static long scrollStepMs() {
+        return Config.SCROLL_STEP_MS < 200 ? 200L : (long)Config.SCROLL_STEP_MS;
+    }
+
+    private static int streetWidth(boolean toNavsd) {
+        if (de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()) {
+            return Config.SCROLL_NAV_STREET_CHARS_PQ;
+        }
+        return toNavsd ? Config.SCROLL_NAV_STREET_CHARS_MQB_NAV
+                : Config.SCROLL_NAV_STREET_CHARS_MQB_MEDIA;
     }
 
     // Nav-capable for the active stack. PQ (PQ audiosd shadow live): the mqbpq navsd functions are
@@ -610,6 +676,8 @@ public final class AANavReader implements Runnable {
             return;
         }
         cleared = true;
+        streetActive = false;
+        streetScroller.clear();
         // Mirror the router (processOnce): clear ONLY the active path. Crucially, on a non-nav
         // cluster we must not poke the navsd shadows -- poke()->process() emits navsd BAP regardless
         // of isNavCapable(), and the shadows ARE constructed on a non-nav EU unit (factory "All"), so

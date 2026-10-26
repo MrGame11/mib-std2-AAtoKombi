@@ -8,6 +8,7 @@
 package de.vw.mib.bap.mqbpq.audiosd.functions;
 
 import de.aatokombi.Config;
+import de.aatokombi.DisplayText;
 import de.vw.mib.asl.internal.androidauto.target.NavigationHandler;
 import de.vw.mib.asl.api.bap.timer.Timer;
 import de.vw.mib.asl.api.bap.timer.TimerNotifier;
@@ -483,26 +484,10 @@ implements TimerNotifier {
         currentStationInfo_Status.infotext_3.setEmptyString();
     }
 
-    // ASCII progress for the 3rd line, e.g. "1:23 ----|----- 3:45". "" when duration unknown.
-    private static final int BAR_WIDTH = 12;
+    // ASCII progress for the 3rd line; unknown duration is an internet-radio style "LIVE" row.
+    private static final int PROGRESS_WIDTH = 24;
     private static String progressBar(int posSec, int durSec) {
-        if (durSec <= 0) return "";
-        if (posSec < 0) posSec = 0;
-        if (posSec > durSec) posSec = durSec;
-        int pos = (int) ((long) posSec * (BAR_WIDTH - 1) / durSec);
-        if (pos < 0) pos = 0; else if (pos > BAR_WIDTH - 1) pos = BAR_WIDTH - 1;
-        StringBuffer b = new StringBuffer();
-        b.append(fmtMMSS(posSec)).append(' ');
-        for (int i = 0; i < BAR_WIDTH; i++) b.append(i == pos ? '|' : '-');
-        b.append(' ').append(fmtMMSS(durSec));
-        return b.toString();
-    }
-
-    // Seconds -> "m:ss".
-    private static String fmtMMSS(int sec) {
-        int m = sec / 60;
-        int s = sec % 60;
-        return m + ":" + (s < 10 ? "0" : "") + s;
+        return DisplayText.progressLine(posSec, durSec, PROGRESS_WIDTH);
     }
 
     private boolean setArtistAndAlbum(CurrentStationInfo_Status currentStationInfo_Status) {

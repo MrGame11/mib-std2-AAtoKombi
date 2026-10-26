@@ -216,9 +216,22 @@ The defaults just work. All build-time switches live in one file —
 - `SHOW_NAV` — draw AA turn-by-turn on the cluster (the navsd **Navigation** menu on a nav-capable
   cluster, the media widget on a non-nav one). Default on.
 - `SHOW_MEDIA` — show the real now-playing track in the media widget when not navigating. Default on.
-- `SHOW_MEDIA_PROGRESS` — add an ASCII playback progress bar to the now-playing track. Default off.
+- `SHOW_MEDIA_PROGRESS` — add an ASCII playback progress bar to the now-playing track. Default on in
+  the test branch.
+  Streams without a finite duration show `LIVE`; long playback times use `h:mm:ss` and a
+  dynamically shortened bar so the complete line stays within 24 characters.
 - `SHOW_COVER_ART` — push the AA album cover to the cluster (AID / colour Virtual Cockpit only; inert
   on a monochrome cluster). Requires `SHOW_MEDIA`. Default off.
+- `SCROLL_MEDIA_TITLE` — software-scroll an over-long track title in the media view. Default on in
+  the test branch; AID uses the MQB width.
+- `SCROLL_NAV_STREET` — software-scroll an over-long next-road name both in the native BAP
+  Navigation page and in the text navigation fallback on the media page. Default on in the test
+  branch.
+- `SCROLL_STEP_MS` / `SCROLL_EDGE_PAUSE_MS` — select marquee speed and the pause at both edges.
+  Values below 200 ms are clamped to 200 ms to avoid flooding the HMI/BAP update path.
+- `SCROLL_*_CHARS_*` — separate character-window widths for MQB/AID media, MQB native navigation,
+  MQB media navigation and PQ. Cluster fonts are proportional, so these remain build-time tuning
+  values rather than claims about pixel width.
 - `SUPPRESS_NAV_ACTIVE_PLACEHOLDER` — hide the stock *"Navigation on the mobile device is active"*
   cluster placeholder. Default on.
 - `LOG_LEVEL` — log verbosity (`TRACE` … `SILENT`).

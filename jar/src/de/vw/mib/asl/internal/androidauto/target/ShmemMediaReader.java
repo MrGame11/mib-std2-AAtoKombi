@@ -1,6 +1,8 @@
 package de.vw.mib.asl.internal.androidauto.target;
 
 import de.aatokombi.Config;
+import de.aatokombi.DisplayText;
+import de.aatokombi.TextScroller;
 import de.adi961.miblogger.MIBLogger;
 import de.vw.mib.bap.mqbab2.audiosd.functions.CurrentStationInfo;
 import de.vw.mib.asl.framework.internal.framework.ServiceManager;
@@ -33,6 +35,11 @@ public class ShmemMediaReader implements Runnable {
     private static final long POLL_MS = 500L;
 
     private Timer timer;
+    private Timer scrollTimer;
+    private final TextScroller titleScroller = new TextScroller();
+    private String lastSong = "";
+    private String lastArtist = "";
+    private String lastAlbum = "";
     private long lastSeq = -1L;
     private long lastSeqChangeMs = 0L;
     private long lastSession = -1L;   // AA session epoch from the shim; change => phone reconnected
@@ -55,6 +62,13 @@ public class ShmemMediaReader implements Runnable {
             this.timer = ServiceManager.timerManager.createTimer(
                     "AATOKOMBI_MEDIA_POLL", POLL_MS, true, this, Timer.TIMER_THREAD_INVOKER);
             this.timer.start();
+            if (Config.SCROLL_MEDIA_TITLE) {
+                this.scrollTimer = ServiceManager.timerManager.createTimer(
+                        "AATOKOMBI_MEDIA_SCROLL", scrollStepMs(), true, new Runnable() {
+                            public void run() { scrollTitleOnce(); }
+                        }, Timer.TIMER_THREAD_INVOKER);
+                this.scrollTimer.start();
+            }
             MIBLogger.getInstance().info("ShmemMediaReader timer started, polling " + PATH);
         } catch (Throwable t) {
             MIBLogger.getInstance().error("ShmemMediaReader timer start failed: " + t);
@@ -122,9 +136,9 @@ public class ShmemMediaReader implements Runnable {
         lastSeq = seq;
         lastSeqChangeMs = System.currentTimeMillis();
 
-        String song   = f.length > 0 ? f[0] : "";
-        String artist = f.length > 1 ? f[1] : "";
-        String album  = f.length > 2 ? f[2] : "";
+        String song   = DisplayText.cleanMetadata(f.length > 0 ? f[0] : "");
+        String artist = DisplayText.cleanMetadata(f.length > 1 ? f[1] : "");
+        String album  = DisplayText.cleanMetadata(f.length > 2 ? f[2] : "");
         int posSec = parseIntSafe(f.length > 3 ? f[3] : null);
         int durSec = parseIntSafe(f.length > 4 ? f[4] : null);
 
@@ -136,7 +150,15 @@ public class ShmemMediaReader implements Runnable {
                     + " pos=" + posSec + " dur=" + durSec);
         }
 
-        CurrentStationInfo.mediaTitle = song;
+        boolean trackChanged = !song.equals(lastSong) || !artist.equals(lastArtist) || !album.equals(lastAlbum);
+        if (trackChanged) {
+            lastSong = song;
+            lastArtist = artist;
+            lastAlbum = album;
+            titleScroller.setText(song, mediaTitleWidth(), System.currentTimeMillis(),
+                    Config.SCROLL_EDGE_PAUSE_MS);
+        }
+        CurrentStationInfo.mediaTitle = Config.SCROLL_MEDIA_TITLE ? titleScroller.getVisible() : song;
         CurrentStationInfo.mediaArtist = artist;
         CurrentStationInfo.mediaAlbum = album;
         CurrentStationInfo.mediaPosSec = posSec;
@@ -155,6 +177,29 @@ public class ShmemMediaReader implements Runnable {
                 target.applyCoverArt(coverLen);
             }
         }
+    }
+
+    /** Advance the software marquee independently of the phone's ~1 Hz playback heartbeat. */
+    private void scrollTitleOnce() {
+        try {
+            if (!Config.SCROLL_MEDIA_TITLE || CurrentStationInfo.mediaTitle == null) return;
+            if (titleScroller.advance(System.currentTimeMillis(), scrollStepMs(),
+                    Config.SCROLL_EDGE_PAUSE_MS)) {
+                CurrentStationInfo.mediaTitle = titleScroller.getVisible();
+                CurrentStationInfo.pokeNav();
+            }
+        } catch (Throwable t) {
+            // A display convenience must never disturb Android Auto or the HMI timer thread.
+        }
+    }
+
+    private static long scrollStepMs() {
+        return Config.SCROLL_STEP_MS < 200 ? 200L : (long)Config.SCROLL_STEP_MS;
+    }
+
+    private static int mediaTitleWidth() {
+        return de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()
+                ? Config.SCROLL_MEDIA_TITLE_CHARS_PQ : Config.SCROLL_MEDIA_TITLE_CHARS_MQB;
     }
 
     /** Parse a long, defaulting on null / garbage. */
@@ -221,6 +266,10 @@ public class ShmemMediaReader implements Runnable {
         CurrentStationInfo.mediaAlbum = null;
         CurrentStationInfo.mediaPosSec = 0;
         CurrentStationInfo.mediaDurSec = 0;
+        titleScroller.clear();
+        lastSong = "";
+        lastArtist = "";
+        lastAlbum = "";
         CurrentStationInfo.pokeNav();
         if (Config.SHOW_COVER_ART && target != null) {
             try { target.applyCoverArt(0); } catch (Throwable t) {}

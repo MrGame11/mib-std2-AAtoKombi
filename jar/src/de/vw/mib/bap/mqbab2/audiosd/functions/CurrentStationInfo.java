@@ -4,6 +4,7 @@
 package de.vw.mib.bap.mqbab2.audiosd.functions;
 
 import de.aatokombi.Config;
+import de.aatokombi.DisplayText;
 import de.adi961.miblogger.MIBLogger;
 import de.vw.mib.bap.array.timer.Timer;
 import de.vw.mib.bap.array.timer.TimerNotifier;
@@ -120,29 +121,10 @@ ExboxServiceListener {
     // The cluster's Q4 slot shows ~24 characters — everything we put there has to fit unscrolled.
     private static final int Q4_WIDTH = 24;
 
-    // Scrubber-style progress for the Q4 slot, e.g. "1:23 -----|------ 3:45": a uniform '-' track with
-    // a single '|' play-marker at the current position, elapsed/total on the sides. Constant rendered
-    // width (BAR_WIDTH-1 dashes + one marker) so the line doesn't stretch under the cluster's
-    // proportional font as progress advances. ASCII-only. Returns "" when there's no known duration.
-    private static final int BAR_WIDTH = 12;
+    // Scrubber-style progress for Q4. DisplayText shrinks the bar for long-form audio and returns
+    // "LIVE" when the phone supplies no finite duration (internet radio).
     private static String progressBar(int posSec, int durSec) {
-        if (durSec <= 0) return "";
-        if (posSec < 0) posSec = 0;
-        if (posSec > durSec) posSec = durSec;
-        int pos = (int) ((long) posSec * (BAR_WIDTH - 1) / durSec);
-        if (pos < 0) pos = 0; else if (pos > BAR_WIDTH - 1) pos = BAR_WIDTH - 1;
-        StringBuffer b = new StringBuffer(Q4_WIDTH);
-        b.append(fmtMMSS(posSec)).append(' ');
-        for (int i = 0; i < BAR_WIDTH; i++) b.append(i == pos ? '|' : '-');
-        b.append(' ').append(fmtMMSS(durSec));
-        return b.toString();
-    }
-
-    // Seconds -> "m:ss" (minutes uncapped so long podcasts still read correctly).
-    private static String fmtMMSS(int sec) {
-        int m = sec / 60;
-        int s = sec % 60;
-        return m + ":" + (s < 10 ? "0" : "") + s;
+        return DisplayText.progressLine(posSec, durSec, Q4_WIDTH);
     }
 
     static {
@@ -461,6 +443,11 @@ ExboxServiceListener {
                 if (bar.length() > 0) {
                     n = 0;
                     currentStationInfo_Status.quaternaryInformation.setContent(clampLine(bar));
+                    currentStationInfo_Status.qi_Type = 0;
+                } else {
+                    // A reused status entity may still contain the previous track's Q4. Always clear
+                    // it when the progress option is off.
+                    currentStationInfo_Status.quaternaryInformation.setContent("");
                     currentStationInfo_Status.qi_Type = 0;
                 }
                 if (Config.LOG_LEVEL <= MIBLogger.DEBUG) MIBLogger.getInstance().debug("CurrentStationInfo: track-in-media t='" + mediaTitle + "' a='" + mediaArtist + "' al='" + mediaAlbum + "' bar='" + bar + "'");
