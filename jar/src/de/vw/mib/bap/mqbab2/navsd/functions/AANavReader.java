@@ -261,8 +261,8 @@ public final class AANavReader implements Runnable {
         }
     }
 
-    private static long scrollStepMs() {
-        return Config.SCROLL_STEP_MS < 200 ? 200L : (long)Config.SCROLL_STEP_MS;
+    private static int scrollStepMs() {
+        return Config.SCROLL_STEP_MS < 200 ? 200 : Config.SCROLL_STEP_MS;
     }
 
     private static int streetWidth(boolean toNavsd) {
