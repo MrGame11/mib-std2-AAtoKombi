@@ -41,7 +41,7 @@ Kombibridge is a free hobby project, maintained in my spare time.
 
 ⭐ Starring this repository is already a great way to show your support and is more than enough!
 
-❤️ If you'd still like to support the project financially, feel free to reach out to me directly, and I'll gladly share the available options.
+❤️ If you'd still like to support the project financially (Keep in mind, I didn’t write much), feel free to reach out to me directly, and I'll share the available options.
 
 ## Demo
 
@@ -77,13 +77,26 @@ Kombibridge is a free hobby project, maintained in my spare time.
   <code>SHOW_MEDIA_PROGRESS</code> bar. Both switches are off by default.</em>
 </p>
 
+### VW MQB analogue cluster (mono centre display)
+BETTER PICTURES SOON
+
+<p align="center">
+  <img src="docs/img/cluster-nav-vw-mono.jpg" alt="Android Auto turn-by-turn maneuver arrow (arrow + street) in the small monochrome centre display" width="410">
+  <img src="docs/img/cluster-media-vw-mono.jpg" alt="Kombibridge now-playing track (artist / album / title / progress bar) in the small monochrome centre display" width="410">
+  <br>
+  <em>The cluster (small monochrome centre display between analogue gauges (MFD/MFA)),
+  with both output paths working independently.
+  <strong>Left:</strong> Android Auto turn-by-turn maneuver via the navigation path.
+  <strong>Right:</strong> the real now-playing track (artist / album / title progress bar) via the media path.</em>
+</p>
+
 ### Older PQ cluster (mono centre display)
 
 <p align="center">
   <img src="docs/img/cluster-nav-pq.jpg" alt="Android Auto turn-by-turn maneuver arrow in the small monochrome centre display of an older PQ MIB2 STD2 cluster" width="410">
   <img src="docs/img/cluster-media-pq.jpg" alt="Kombibridge now-playing track (artist / album / title) in the small monochrome centre display of an older PQ MIB2 STD2 cluster" width="410">
   <br>
-  <em>The older <strong>PQ</strong> cluster (small monochrome centre display between analogue gauges),
+  <em>The older <strong>PQ</strong> cluster (small monochrome centre display between analogue gauges (MFD/MFA)),
   with both output paths working independently.
   <strong>Left:</strong> Android Auto turn-by-turn maneuver via the navigation path.
   <strong>Right:</strong> the real now-playing track (artist / album / title) via the media path.</em>
