@@ -3,6 +3,20 @@
 Show Android Auto turn-by-turn navigation (and player info) on the
 instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).
 
+> [!IMPORTANT]
+> **Project takeover & maintenance notice**
+>
+> The original project creator has deleted their project and has explicitly requested
+> not to be named or credited in this continuation. That request is respected here.
+>
+> I am taking over the project and making it available **as-is**, without any guarantee
+> of continued development, functionality, or support. I only plan **occasional minor
+> updates** and can offer **limited assistance**.
+>
+> Most programming and potential future changes are carried out with **AI assistance**.
+> As a result, updates may be limited and should not be assumed to be thoroughly tested.
+> **Use this project entirely at your own risk.**
+
 <p align="center">
   <img src="docs/img/cluster-nav-amundsen.jpg" alt="Android Auto turn-by-turn in the real Navigation menu on a nav-capable (Amundsen) MIB2 STD2 cluster" width="640">
   <br>
@@ -23,9 +37,11 @@ protocol.
 
 ## ☕ Support this project
 
-Kombibridge is a free hobby project. 
+Kombibridge is a free hobby project, maintained in my spare time.
 
- ⭐ Starring the repo is help enough.
+⭐ Starring this repository is already a great way to show your support and is more than enough!
+
+❤️ If you'd still like to support the project financially, feel free to reach out to me directly, and I'll gladly share the available options.
 
 ## Demo
 
@@ -147,7 +163,8 @@ firmware builds. (Development was done on **`MST2_EU_SK_ZR_P0480T`**.)
 > [`docs/INSTALL_FTP_TELNET.md`](docs/INSTALL_FTP_TELNET.md) instead (Still requires toolbox to enable FTP/Telnet).
 
 ### 0. Prerequisites (once)
-- **The deployment toolbox** https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi_-_BACKUP set up for your unit.
+- **The deployment toolbox** — - Install the [**Modified Toolbox**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi) and make sure it is properly configured for your unit.
+  **Already have the [MIB STD2 Toolbox](https://github.com/olli991/mib-std2-pq-zr-toolbox) installed?** No need to fully wipe and reinstall! Simply use the built-in **Update** function to upload and install the [**modified Toolbox version**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi).
 - **Docker** — the whole build runs in containers (jxe2jar + the JDK 8 / clang / lld / pyelftools
   toolchain), so nothing else needs installing.
 
