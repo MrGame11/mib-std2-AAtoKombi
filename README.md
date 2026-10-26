@@ -1,4 +1,4 @@
-# Kombibridge — Android Auto navigation on the MIB2 STD2 instrument cluster
+# AAtoKombi — Android Auto navigation on the MIB2 STD2 instrument cluster
 
 Show Android Auto turn-by-turn navigation (and player info) on the
 instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).
@@ -6,7 +6,7 @@ instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).
 > [!IMPORTANT]
 > **Project takeover & maintenance notice**
 >
-> The original project creator has deleted their project and has explicitly requested
+> The original project creator has deleted their project (Kombibridge) and has explicitly requested
 > not to be named or credited in this continuation. That request is respected here.
 >
 > I am taking over the project and making it available **as-is**, without any guarantee
