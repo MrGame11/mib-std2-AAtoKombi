@@ -163,7 +163,7 @@ firmware builds. (Development was done on **`MST2_EU_SK_ZR_P0480T`**.)
 > [`docs/INSTALL_FTP_TELNET.md`](docs/INSTALL_FTP_TELNET.md) instead (Still requires toolbox to enable FTP/Telnet).
 
 ### 0. Prerequisites (once)
-- **The deployment toolbox** — - Install the [**Modified Toolbox**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi) and make sure it is properly configured for your unit.
+- **The deployment toolbox** — Install the [**Modified Toolbox**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi) and make sure it is properly configured for your unit.
   **Already have the [MIB STD2 Toolbox](https://github.com/olli991/mib-std2-pq-zr-toolbox) installed?** No need to fully wipe and reinstall! Simply use the built-in **Update** function to upload and install the [**modified Toolbox version**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi).
 - **Docker** — the whole build runs in containers (jxe2jar + the JDK 8 / clang / lld / pyelftools
   toolchain), so nothing else needs installing.
