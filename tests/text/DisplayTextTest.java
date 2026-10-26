@@ -63,6 +63,14 @@ public final class DisplayTextTest {
         s.setText("short", 20, 0L, 1000);
         eq("short text is unchanged", s.getVisible(), "short");
         yes("short text never advances", !s.advance(5000L, 100, 1000));
+
+        s.setText("ABCDE", 4, 0L, 1000);       // exactly one character would be clipped
+        eq("one hidden character stays whole", s.getVisible(), "ABCDE");
+        yes("one hidden character does not scroll", !s.advance(5000L, 100, 1000));
+
+        s.setText("ABCDEF", 4, 0L, 1000);      // two hidden characters enable the marquee
+        eq("two hidden characters use a window", s.getVisible(), "ABCD");
+        yes("two hidden characters scroll", s.advance(1000L, 100, 1000));
     }
 
     public static void main(String[] args) {

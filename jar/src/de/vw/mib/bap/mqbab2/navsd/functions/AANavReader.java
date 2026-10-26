@@ -42,6 +42,11 @@ public final class AANavReader implements Runnable {
 
     private static final String PATH = "/dev/shmem/aa_nav";
     private static final long POLL_MS = 300L;
+    // Advanced per-layout tuning. These are deliberately internal measured character windows;
+    // proportional fonts mean they are not meaningful as normal user-facing build choices.
+    private static final int STREET_CHARS_MQB_NAV = 24;
+    private static final int STREET_CHARS_MQB_MEDIA = 28;
+    private static final int STREET_CHARS_PQ = 20;
     private static final int[] NO_LANES = new int[]{ 0 };
     // English, like the manoeuvre words on the media path: the firmware's own strings are not
     // reachable from here, and a mixed-language line would read worse than a consistent one.
@@ -262,10 +267,9 @@ public final class AANavReader implements Runnable {
 
     private static int streetWidth(boolean toNavsd) {
         if (de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()) {
-            return Config.SCROLL_NAV_STREET_CHARS_PQ;
+            return STREET_CHARS_PQ;
         }
-        return toNavsd ? Config.SCROLL_NAV_STREET_CHARS_MQB_NAV
-                : Config.SCROLL_NAV_STREET_CHARS_MQB_MEDIA;
+        return toNavsd ? STREET_CHARS_MQB_NAV : STREET_CHARS_MQB_MEDIA;
     }
 
     // Nav-capable for the active stack. PQ (PQ audiosd shadow live): the mqbpq navsd functions are

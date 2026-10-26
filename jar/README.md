@@ -8,7 +8,7 @@ classes shadow the stock ones with the same fully-qualified names.
 Our own code:
 - `de/aatokombi/Config.java` — the single file of compile-time switches (`SHOW_NAV`, `SHOW_MEDIA`,
   `SHOW_MEDIA_PROGRESS`, `SHOW_COVER_ART`, `SUPPRESS_NAV_ACTIVE_PLACEHOLDER`,
-  `SCROLL_MEDIA_TITLE`, `SCROLL_NAV_STREET`, their speed/window tuning,
+  `SCROLL_MEDIA_TITLE`, `SCROLL_NAV_STREET`, their speed/pause tuning,
   `AA_STALE_BACKSTOP_MS`, `LOG_LEVEL`). Every gate is a compile-time constant, so a disabled
   feature is dead-code-eliminated and leaves no bytecode behind. Parts of the turn-by-turn feed that
   the runtime already gates — the lane row and the destination distance / travel time (present only

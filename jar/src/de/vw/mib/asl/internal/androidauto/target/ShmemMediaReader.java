@@ -33,6 +33,11 @@ public class ShmemMediaReader implements Runnable {
 
     private static final String PATH = "/dev/shmem/aa_media";
     private static final long POLL_MS = 500L;
+    // Advanced per-layout tuning. Kept here rather than exposed as normal build switches: the
+    // proportional cluster fonts make these measured safety windows, not user-facing preferences.
+    // AID uses the MQB audiosd path.
+    private static final int TITLE_CHARS_MQB = 18;
+    private static final int TITLE_CHARS_PQ = 20;
 
     private Timer timer;
     private Timer scrollTimer;
@@ -199,7 +204,7 @@ public class ShmemMediaReader implements Runnable {
 
     private static int mediaTitleWidth() {
         return de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()
-                ? Config.SCROLL_MEDIA_TITLE_CHARS_PQ : Config.SCROLL_MEDIA_TITLE_CHARS_MQB;
+                ? TITLE_CHARS_PQ : TITLE_CHARS_MQB;
     }
 
     /** Parse a long, defaulting on null / garbage. */

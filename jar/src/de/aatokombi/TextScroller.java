@@ -6,6 +6,10 @@ package de.aatokombi;
  * Java 1.3; keep this class free of newer language/library features.
  */
 public final class TextScroller {
+    // One clipped character is not worth animating. Keep sending the complete static string and let
+    // the cluster clip it naturally; start the marquee only when at least two characters are hidden.
+    private static final int MIN_HIDDEN_CHARS = 2;
+
     private String text = "";
     private String visible = "";
     private int width = 1;
@@ -27,7 +31,7 @@ public final class TextScroller {
     /** Advance at most one character. Returns true only when the displayed window changed. */
     public synchronized boolean advance(long nowMs, int stepMs, int edgePauseMs) {
         int max = this.text.length() - this.width;
-        if (max <= 0 || nowMs < this.nextMoveMs) return false;
+        if (max < MIN_HIDDEN_CHARS || nowMs < this.nextMoveMs) return false;
 
         if (this.offset < max) {
             this.offset++;
@@ -53,7 +57,7 @@ public final class TextScroller {
     }
 
     private String windowAt(int start) {
-        if (this.text.length() <= this.width) return this.text;
+        if (this.text.length() - this.width < MIN_HIDDEN_CHARS) return this.text;
         int end = start + this.width;
         if (end > this.text.length()) end = this.text.length();
         return this.text.substring(start, end);

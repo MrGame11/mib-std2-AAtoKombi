@@ -5,7 +5,9 @@
 #   * clang + lld  — freestanding armv7 cross-compile + ld.lld (shim/build.sh)
 #   * python3 + pyelftools — the ELF injector (shim/inject.py)
 
-FROM eclipse-temurin:8-jdk
+# Pin the OS variant. The floating 8-jdk tag can move to a short-lived Ubuntu release whose apt
+# repositories disappear, breaking otherwise reproducible PC builds.
+FROM eclipse-temurin:8-jdk-jammy
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \

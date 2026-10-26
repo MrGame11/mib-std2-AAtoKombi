@@ -78,14 +78,6 @@ public final class Config {
     /** Hold the complete beginning and the final window before wrapping to the start. */
     public static final int SCROLL_EDGE_PAUSE_MS = 1400;
 
-    /* Character windows are deliberately conservative; cluster fonts are proportional. Tune and
-     * rebuild if a particular cluster can show more. AID uses the MQB audiosd path. */
-    public static final int SCROLL_MEDIA_TITLE_CHARS_MQB = 18;
-    public static final int SCROLL_MEDIA_TITLE_CHARS_PQ = 20;
-    public static final int SCROLL_NAV_STREET_CHARS_MQB_NAV = 24;
-    public static final int SCROLL_NAV_STREET_CHARS_MQB_MEDIA = 28;
-    public static final int SCROLL_NAV_STREET_CHARS_PQ = 20;
-
     // Both SHOW_NAV and SHOW_MEDIA false -> AAtoKombi feeds nothing to the cluster (stock label,
     // stock navsd).
 

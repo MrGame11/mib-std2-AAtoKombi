@@ -229,13 +229,15 @@ The defaults just work. All build-time switches live in one file —
   branch.
 - `SCROLL_STEP_MS` / `SCROLL_EDGE_PAUSE_MS` — select marquee speed and the pause at both edges.
   Values below 200 ms are clamped to 200 ms to avoid flooding the HMI/BAP update path.
-- `SCROLL_*_CHARS_*` — separate character-window widths for MQB/AID media, MQB native navigation,
-  MQB media navigation and PQ. Cluster fonts are proportional, so these remain build-time tuning
-  values rather than claims about pixel width.
+  One clipped character stays static; scrolling begins when at least two characters are hidden.
+  After the final window and its pause, the text jumps to the beginning and pauses there again.
+  Advanced per-layout character widths remain internal constants in the media/nav readers because
+  proportional cluster fonts make them hardware tuning rather than a normal build choice.
 - `SUPPRESS_NAV_ACTIVE_PLACEHOLDER` — hide the stock *"Navigation on the mobile device is active"*
   cluster placeholder. Default on.
 - `LOG_LEVEL` — log verbosity (`TRACE` … `SILENT`).
 
+Test-branch behaviour and tuning: [`docs/TEST_SCROLLING.md`](docs/TEST_SCROLLING.md).
 Deeper build notes: [`docs/`](docs/) and [`shim/README.md`](shim/README.md).
 
 ---
