@@ -148,7 +148,7 @@ tools/            optional firmware-extraction / shadow-verification helpers
 
 The on-device **deployment** (SD card, Green Engineering Menu, activate/deactivate scripts)
 lives in a separate toolbox repository —
-https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtokombi_-_BACKUP — this repo
+https://github.com/MrGame11/mib-std2-pq-zr-toolbox_AAtoKombi — this repo
 only builds the two artifacts.
 
 ---
@@ -163,8 +163,8 @@ firmware builds. (Development was done on **`MST2_EU_SK_ZR_P0480T`**.)
 > [`docs/INSTALL_FTP_TELNET.md`](docs/INSTALL_FTP_TELNET.md) instead (Still requires toolbox to enable FTP/Telnet).
 
 ### 0. Prerequisites (once)
-- **The deployment toolbox** — Install the [**Modified Toolbox**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtoKombi) and make sure it is properly configured for your unit.
-  **Already have the [MIB STD2 Toolbox](https://github.com/olli991/mib-std2-pq-zr-toolbox) installed?** No need to fully wipe and reinstall! Simply use the built-in **Update** function to upload and install the [**modified Toolbox version**](https://github.com/MrGame1111/mib-std2-pq-zr-toolbox_AAtoKombi).
+- **The deployment toolbox** — Install the [**Modified Toolbox**](https://github.com/MrGame11/mib-std2-pq-zr-toolbox_AAtoKombi) and make sure it is properly configured for your unit.
+  **Already have the [MIB STD2 Toolbox](https://github.com/olli991/mib-std2-pq-zr-toolbox) installed?** No need to fully wipe and reinstall! Simply use the built-in **Update** function to upload and install the [**modified Toolbox version**](https://github.com/MrGame11/mib-std2-pq-zr-toolbox_AAtoKombi).
 - **Docker** — the whole build runs in containers (jxe2jar + the JDK 8 / clang / lld / pyelftools
   toolchain), so nothing else needs installing.
 
