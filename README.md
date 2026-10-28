@@ -55,7 +55,7 @@ Kombibridge is a free hobby project, maintained in my spare time.
   <img src="docs/img/cluster-media.jpg" alt="Android Auto now-playing track with an ASCII progress bar (media mode) on a MIB2 STD2 instrument cluster" width="640">
   <br>
   <em><strong>Media mode:</strong> the real now-playing track (artist / album / title) with an ASCII progress
-  bar (<code>SHOW_MEDIA_PROGRESS</code>, off by default), shown when no route guidance is active.</em>
+  bar (<code>SHOW_MEDIA_PROGRESS</code>, on by default in this test branch), shown when no route guidance is active.</em>
 </p>
 
 ### SEAT Virtual Cluster (Digital Cockpit)
@@ -74,7 +74,7 @@ Kombibridge is a free hobby project, maintained in my spare time.
   <br>
   <em><strong>Cover art</strong> (<code>SHOW_COVER_ART</code>, AID / colour Virtual Cockpit only): the Android Auto
   album cover pushed to the cluster alongside the now-playing track and the
-  <code>SHOW_MEDIA_PROGRESS</code> bar. Both switches are off by default.</em>
+  <code>SHOW_MEDIA_PROGRESS</code> bar. Cover art is off by default; progress is on in this test branch.</em>
 </p>
 
 ### Older PQ cluster (mono centre display)

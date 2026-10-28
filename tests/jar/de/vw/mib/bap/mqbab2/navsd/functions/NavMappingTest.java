@@ -168,6 +168,7 @@ public final class NavMappingTest {
         eq("trip distance rounds up",          AANavReader.formatTripDistance(32500), "33 km");
         eq("10 km is the switch",              AANavReader.formatTripDistance(10000), "10 km");
         eq("just under it",                    AANavReader.formatTripDistance(9999), "9,9 km");
+        eq("large distance does not wrap negative", AANavReader.formatTripDistance(Integer.MAX_VALUE), "2147484 km");
     }
 
     // ---- destination line -> distance / remaining travel time ----------------------------------
@@ -199,7 +200,7 @@ public final class NavMappingTest {
         eq("3599 s -> minutes", AANavReader.remainingHoursMinutes(3599)[1], 0);
 
         // Both fields are single BAP bytes, so nothing may leave the 0..99 / 0..59 boxes.
-        int[] secs = { 1, 59, 60, 61, 3599, 86399, 999999, 1000000 };
+        int[] secs = { 1, 59, 60, 61, 3599, 86399, 999999, 1000000, Integer.MAX_VALUE };
         for (int i = 0; i < secs.length; i++) {
             int[] x = AANavReader.remainingHoursMinutes(secs[i]);
             if (x[0] < 0 || x[0] > 99 || x[1] < 0 || x[1] > 59) {

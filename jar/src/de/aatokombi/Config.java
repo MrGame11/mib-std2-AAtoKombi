@@ -61,8 +61,8 @@ public final class Config {
     /**
      * Scroll an over-long Android Auto track title in the cluster media view. This is a software
      * marquee: AAtoKombi sends a moving character window because the BAP property has no portable
-     * "scroll" flag. Works on MQB, PQ and AID clusters; the separate widths below account for the
-     * different layouts. false keeps the current full-title behaviour and lets the cluster clip it.
+     * "scroll" flag. MQB, PQ and AID use the existing BAP paths; internal window sizes are estimates
+     * and need validation on each display. false sends the full title and lets the cluster clip it.
      */
     public static final boolean SCROLL_MEDIA_TITLE = true;
 
@@ -72,7 +72,7 @@ public final class Config {
      */
     public static final boolean SCROLL_NAV_STREET = true;
 
-    /** One character step every N milliseconds. 250..500 ms is the useful range on real clusters. */
+    /** Requested character step interval. Clamped to 200 ms; effective cadence needs a vehicle test. */
     public static final int SCROLL_STEP_MS = 350;
 
     /** Hold the complete beginning and the final window before wrapping to the start. */

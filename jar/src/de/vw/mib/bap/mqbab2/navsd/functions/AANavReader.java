@@ -42,7 +42,7 @@ public final class AANavReader implements Runnable {
 
     private static final String PATH = "/dev/shmem/aa_nav";
     private static final long POLL_MS = 300L;
-    // Advanced per-layout tuning. These are deliberately internal measured character windows;
+    // Advanced per-layout tuning. These are internal estimates, not measured character windows;
     // proportional fonts mean they are not meaningful as normal user-facing build choices.
     private static final int STREET_CHARS_MQB_NAV = 24;
     private static final int STREET_CHARS_MQB_MEDIA = 28;
@@ -221,7 +221,7 @@ public final class AANavReader implements Runnable {
         streetOnNavsd = toNavsd;
         streetIsRerouting = rerouting;
         streetActive = true;
-        streetScroller.setText(rawStreet, streetWidth(toNavsd), System.currentTimeMillis(),
+        streetScroller.setText(rawStreet, streetWidth(toNavsd), streetByteLimit(toNavsd), System.currentTimeMillis(),
                 Config.SCROLL_EDGE_PAUSE_MS);
         String displayStreet = Config.SCROLL_NAV_STREET ? streetScroller.getVisible() : rawStreet;
         if (toNavsd) {
@@ -270,6 +270,12 @@ public final class AANavReader implements Runnable {
             return STREET_CHARS_PQ;
         }
         return toNavsd ? STREET_CHARS_MQB_NAV : STREET_CHARS_MQB_MEDIA;
+    }
+
+    private static int streetByteLimit(boolean toNavsd) {
+        boolean pq = de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive();
+        // BAPString capacity minus its one-byte length prefix, checked in the target MIBHMI.
+        return toNavsd ? (pq ? 74 : 75) : (pq ? 48 : 72);
     }
 
     // Nav-capable for the active stack. PQ (PQ audiosd shadow live): the mqbpq navsd functions are
@@ -631,7 +637,7 @@ public final class AANavReader implements Runnable {
      */
     static String formatTripDistance(int meters) {
         if (meters >= 10000) {
-            return ((meters + 500) / 1000) + " km";
+            return (((long)meters + 500L) / 1000L) + " km";
         }
         return formatDistance(meters);
     }
@@ -864,7 +870,7 @@ public final class AANavReader implements Runnable {
         if (seconds <= 0) {
             return new int[]{ 0, 0 };
         }
-        int minutes = (seconds + 30) / 60;
+        int minutes = (int)(((long)seconds + 30L) / 60L);
         int hours = minutes / 60;
         minutes = minutes - hours * 60;
         if (hours > 99) {

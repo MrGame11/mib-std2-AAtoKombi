@@ -34,7 +34,7 @@ public class ShmemMediaReader implements Runnable {
     private static final String PATH = "/dev/shmem/aa_media";
     private static final long POLL_MS = 500L;
     // Advanced per-layout tuning. Kept here rather than exposed as normal build switches: the
-    // proportional cluster fonts make these measured safety windows, not user-facing preferences.
+    // proportional cluster fonts make these estimates, not measured pixel widths.
     // AID uses the MQB audiosd path.
     private static final int TITLE_CHARS_MQB = 18;
     private static final int TITLE_CHARS_PQ = 20;
@@ -160,9 +160,14 @@ public class ShmemMediaReader implements Runnable {
             lastSong = song;
             lastArtist = artist;
             lastAlbum = album;
-            titleScroller.setText(song, mediaTitleWidth(), System.currentTimeMillis(),
-                    Config.SCROLL_EDGE_PAUSE_MS);
+            // A different recording can have the same title. Restart when its artist/album changes.
+            titleScroller.clear();
         }
+        boolean pq = de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive();
+        // Re-evaluate the layout even when only playback position changed: PQ may initialise after
+        // the first metadata frame. Identical text/layout preserves the scrolling position.
+        titleScroller.setText(song, pq ? TITLE_CHARS_PQ : TITLE_CHARS_MQB, pq ? 48 : 72,
+                System.currentTimeMillis(), Config.SCROLL_EDGE_PAUSE_MS);
         CurrentStationInfo.mediaTitle = Config.SCROLL_MEDIA_TITLE ? titleScroller.getVisible() : song;
         CurrentStationInfo.mediaArtist = artist;
         CurrentStationInfo.mediaAlbum = album;
@@ -200,11 +205,6 @@ public class ShmemMediaReader implements Runnable {
 
     private static int scrollStepMs() {
         return Config.SCROLL_STEP_MS < 200 ? 200 : Config.SCROLL_STEP_MS;
-    }
-
-    private static int mediaTitleWidth() {
-        return de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()
-                ? TITLE_CHARS_PQ : TITLE_CHARS_MQB;
     }
 
     /** Parse a long, defaulting on null / garbage. */
