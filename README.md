@@ -1,5 +1,9 @@
 # AAtoKombi — Android Auto navigation on the MIB2 STD2 instrument cluster
 
+Original project by: [**kkrvch**](https://github.com/kkrvch/mib-std2-kombibridge)
+
+---
+
 Show Android Auto turn-by-turn navigation (and player info) on the
 instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).
 
