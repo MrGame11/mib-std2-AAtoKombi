@@ -4,15 +4,6 @@ Show Android Auto turn-by-turn navigation (and player info) on the
 instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).
 
 > [!IMPORTANT]
-> **Project takeover & maintenance notice**
->
-> The original project creator has deleted their project (Kombibridge) and has explicitly requested
-> not to be named or credited in this backup/continuation. That request is respected here.
->
-> I am taking over the project and making it available **as-is**, without any guarantee
-> of continued development, functionality, or support. I only plan **occasional minor
-> updates** and can offer **limited assistance**.
->
 > Most programming and potential future changes are carried out with **AI assistance**.
 > As a result, updates may be limited and should not be assumed to be thoroughly tested.
 > **Use this project entirely at your own risk.**
