@@ -110,6 +110,10 @@ public final class AANavReader implements Runnable {
             processOnce();
         } catch (Throwable t) {
             // never let the poll disturb the HMI
+        } finally {
+            if (Config.TEST_AA_NAV_CANCEL) {
+                try { RGActDeact.pollAaCancellation(); } catch (Throwable ignored) {}
+            }
         }
     }
 
@@ -146,6 +150,9 @@ public final class AANavReader implements Runnable {
             return;
         }
         String road = p[11];
+
+        if (Config.TEST_AA_NAV_CANCEL) de.aatokombi.NavCancellation.INSTANCE.observe(
+                seq, status, connected, session, System.currentTimeMillis());
 
         // New AA session (phone reconnected): drop any stale content and re-arm the seq tracker, so a
         // yank+replug never leaves the previous session's maneuver on the cluster.

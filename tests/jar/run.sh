@@ -17,7 +17,7 @@ find tests/jar -name '*.java' > jar/build/test-sources.txt
 # Exercise the real mod with API-only firmware stubs; keep these outside the shipped classes.
 mkdir -p jar/build/host
 "${JAVAC:-javac}" -XDignore.symbol.file -d jar/build/host tests/host/HostHmiRunner.java
-for test in de.aatokombi.MediaViewModeTest de.aatokombi.MfaViewKeysTest de.vw.mib.bap.mqbab2.navsd.functions.MediaViewRoutingTest; do
+for test in de.aatokombi.MediaViewModeTest de.aatokombi.MfaViewKeysTest de.aatokombi.NavCancellationTest de.vw.mib.bap.mqbab2.navsd.functions.MediaViewRoutingTest de.vw.mib.bap.mqbab2.navsd.functions.NavCancellationRoutingTest; do
     "${JAVA:-java}" -Xverify:all -cp jar/build/host HostHmiRunner \
         jar/lib/MIBHMI.jar jar/build/classes jar/build/test "$test"
 done

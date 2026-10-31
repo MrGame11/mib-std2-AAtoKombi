@@ -31,7 +31,13 @@ public final class Config {
     public static final boolean MFA_UP_DOWN_SWITCH = true;
 
     /** Test only: route AA navigation to the media page, even on a navigation-equipped unit. */
-    public static final boolean TEST_FORCE_MEDIA_NAVIGATION = true;
+    public static final boolean TEST_FORCE_MEDIA_NAVIGATION = false;
+
+    /** Test: confirmed MQB RG_ActDeact STOP requests native AA navigation focus. */
+    public static final boolean TEST_AA_NAV_CANCEL = true;
+
+    /** Bounded status-only diagnostics in /dev/shmem/aatokombi_nav_cancel.log. */
+    public static final boolean TEST_LOG_NAV_CANCEL = true;
 
     /** Bounded numeric key diagnostics in /dev/shmem/aatokombi_keys.log (no media/phone data). */
     public static final boolean TEST_LOG_MFA_KEYS = true;

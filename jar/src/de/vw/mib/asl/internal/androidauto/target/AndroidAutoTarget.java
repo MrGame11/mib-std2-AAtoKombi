@@ -43,7 +43,7 @@ import java.io.FileOutputStream;
 
 public class AndroidAutoTarget
         extends AbstractASLTarget
-        implements DSIServiceStateListener {
+        implements DSIServiceStateListener, de.aatokombi.NavCancellation.Transport {
     private TimerHandler timerHandler;
     private ASLHandler aslHandler;
     private ASLEventHandler aslEventHandler;
@@ -195,6 +195,7 @@ public class AndroidAutoTarget
     }
 
     private void deInitializeDSI() {
+        if (Config.TEST_AA_NAV_CANCEL) de.aatokombi.NavCancellation.INSTANCE.detach(this);
         if (this.dsiAndroidAuto2Listener != null) {
             DSIProxyFactory.getDSIProxyAPI().getDSIProxy().removeResponseListener(this, class$org$dsi$ifc$androidauto2$DSIAndroidAuto2Listener == null ? (class$org$dsi$ifc$androidauto2$DSIAndroidAuto2Listener = AndroidAutoTarget.class$("org.dsi.ifc.androidauto2.DSIAndroidAuto2Listener")) : class$org$dsi$ifc$androidauto2$DSIAndroidAuto2Listener, this.dsiAndroidAuto2Listener);
         }
@@ -206,6 +207,12 @@ public class AndroidAutoTarget
             this.warn().append("AndroidAutoTarget").append(".getDSIAndroidAuto2() Invalid DSI instance").log();
         }
         return this.dsiAndroidAuto2;
+    }
+
+    public boolean requestNativeNavigationFocus() {
+        return Config.TEST_AA_NAV_CANCEL && this.startupHandler != null
+                && de.aatokombi.NativeNavigationFocus.request(this.dsiAndroidAuto2,
+                        this.startupHandler.isDSI2Registered(), this.startupHandler.isDeviceConnected());
     }
 
     public void startup() {
@@ -226,6 +233,7 @@ public class AndroidAutoTarget
     }
 
     public void shutdown() {
+        if (Config.TEST_AA_NAV_CANCEL) de.aatokombi.NavCancellation.INSTANCE.detach(this);
         if (this.mfaViewKeys != null) this.mfaViewKeys.stop();
         if (this.isTraceEnabled()) {
             this.trace().append("AndroidAutoTarget").append(".shutdown()").log();
@@ -267,6 +275,7 @@ public class AndroidAutoTarget
             this.initializeDSI();
             this.audioHandler.registerTargetToEntertainmentManager();
             this.startupHandler.setDSI2Registered(true);
+            if (Config.TEST_AA_NAV_CANCEL) de.aatokombi.NavCancellation.INSTANCE.attach(this);
             this.navServices = ASLNavigationFactory.getNavigationApi().getASLNavigationServices(this.navigationListener);
             this.navigationListener.initNavServices(this.navServices);
             this.apiImpl = (ASLAndroidAutoExBoxServiceImpl) ASLAndroidAutoFactory.getAndroidAutoApi().getExBoxService();

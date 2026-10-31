@@ -3,6 +3,8 @@
 **Referenz für den ersten Testbranch `test/scrolling-live-progress` (Stand `40e0d89`).**
 Im zweiten Testbranch ist die hier beschriebene BAP-NEXT/PREVIOUS-Umschaltung entfernt.
 Dessen direkte Auf-/Ab-Anbindung und Testschalter stehen in [TEST_MFA_UP_DOWN.md](TEST_MFA_UP_DOWN.md).
+Der zweite Branch enthält inzwischen zusätzlich den [AA-Abbruchtest](TEST_NAV_CANCEL.md).
+Die unten beschriebene fehlende Abbruchweiterleitung bezieht sich auf den ersten Branch/main.
 
 Diese Testbranch-Erweiterung übernimmt Commit
 `4e7c440f2299cfadb81d0de8d500e02c60e8c894` und ergänzt die bestehenden Lauftext- und
@@ -63,8 +65,9 @@ Medienseite gewählt. Dieser Wert wird bei der Pfadauswahl erneut abgefragt.
 Die Darstellung und Bedienfolge dieses Menüs gehören zur Firmware des
 Kombiinstruments. AAtoKombi meldet bei laufender AA-Navigation über `RGStatus`
 den Status „Zielführung aktiv“; deshalb kann das Kombiinstrument seine gewohnte
-Abbruchabfrage anbieten. Ob es das mit AAtoKombi auf einem bestimmten Kombi
-tatsächlich tut, ist bislang nicht am Fahrzeug geprüft.
+Abbruchabfrage anbieten. Auf dem genannten Golf-7-MQB-Mono-Kombi wurde dieses Menü
+inzwischen vom Nutzer mit main beobachtet: Nach Bestätigung erscheint der Kompass,
+während Maps auf der Headunit weiter navigiert.
 
 Eine bestätigte Abbruchanforderung verarbeitet die unveränderte Serienfunktion
 `RGActDeact` (BAP-Funktion 34). In der untersuchten HMI ruft sie für `controlType=1`

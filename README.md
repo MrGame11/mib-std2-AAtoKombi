@@ -1,9 +1,12 @@
 # AAtoKombi — Android Auto navigation on the MIB2 STD2 instrument cluster
 
-**Second test branch: `test/mfa-up-down-forced-media`.** Direct wheel UP/DOWN selects
-navigation/music, and `TEST_FORCE_MEDIA_NAVIGATION=true` routes AA to the media page even
-on navigation-equipped units. Physical key delivery still needs a vehicle test.
-See [`docs/TEST_MFA_UP_DOWN.md`](docs/TEST_MFA_UP_DOWN.md) for behaviour, diagnostics and rollback.
+**Second test branch: `test/mfa-up-down-forced-media`, now with experimental AA route cancellation.**
+Confirming the MQB navigation menu's stop command requests native navigation focus from Android Auto.
+Completion requires fresh AA status feedback; actual Maps/Waze behaviour needs a vehicle test.
+`TEST_FORCE_MEDIA_NAVIGATION=false` is now the default so navigation-equipped units can reach that menu.
+See [`docs/TEST_NAV_CANCEL.md`](docs/TEST_NAV_CANCEL.md) for the test and exact changes.
+The earlier direct wheel UP/DOWN media-view test remains available by enabling the media override;
+see [`docs/TEST_MFA_UP_DOWN.md`](docs/TEST_MFA_UP_DOWN.md).
 
 Show Android Auto turn-by-turn navigation (and player info) on the
 instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).

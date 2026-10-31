@@ -3,6 +3,11 @@
 Branch: `test/mfa-up-down-forced-media`, abgezweigt von `40e0d89` des ersten Testbranches.
 Die Lauftexte, LIVE-Anzeige, Zeitformatierung und der Windows-Build sind enthalten.
 
+**Aktueller Stand:** Der Branch enthält zusätzlich den [Abbruchtest](TEST_NAV_CANCEL.md).
+Dafür ist `TEST_FORCE_MEDIA_NAVIGATION` jetzt standardmäßig **false**. Für den hier
+beschriebenen erzwungenen Medien-/Tastentest den Schalter am PC auf **true** setzen und
+neu bauen. Das frühere Paket `06baf80` verwendete noch `true` als Standard.
+
 ## Was dieser Test macht
 
 - Direkte DSI-Ereignisse `KEY_MFW_UP` wählen die Navigationsansicht auf der Medienseite.
@@ -41,7 +46,7 @@ gespeicherte Ansicht ändern.
 
 ## Einstellungen am PC
 
-In `jar/src/de/aatokombi/Config.java` sind hier standardmäßig eingeschaltet:
+Für den ursprünglichen Medien-/Tastentest in `jar/src/de/aatokombi/Config.java` einstellen:
 
 ```java
 public static final boolean MFA_UP_DOWN_SWITCH = true;
@@ -59,7 +64,8 @@ ist auf MQB, PQ und AID bislang ungetestet.
 
 Ohne den Override verwendet eine nav-fähige Unit wieder die native Navi-Seite; die
 neue Tasten-Umschaltung ist auf diesem Ausgabeweg nicht aktiv. Die Abbruchabfrage einer
-AA-Route wurde auch in diesem Branch nicht implementiert.
+AA-Route wird im aktuellen Stand über den zusätzlichen [Abbruchtest](TEST_NAV_CANCEL.md)
+behandelt; die Darstellung des Menüs übernimmt weiterhin das Kombiinstrument.
 
 ## Fahrzeugtest und Protokoll
 
@@ -88,7 +94,7 @@ Keine `KEY`-Zeile bei vorhandener `ATTACHED`-Meldung bedeutet zunächst nur, das
 Listener kein passendes Lenkradereignis erhalten hat. Das Protokoll erlaubt die nächste
 Zuordnungsprüfung, ersetzt aber keinen Mitschnitt des gesamten Fahrzeugbusses.
 
-## Implementierung und genaue Änderungen
+## Ursprüngliche Implementierung und Änderungen bis `06baf80`
 
 - `DedicatedAudioControl.java` entfernt: die Serienklasse übernimmt wieder alle BAP-Audioaktionen.
 - `MfaViewKeys.java` neu: eigener DSI-KeyPanel-Listener, an `AndroidAutoTarget` Start/Stop
@@ -117,3 +123,4 @@ Vollständiger JAR-Build und die Text-/Lauftext-/Fortschritts-/Navigations-/Tast
 sind gegen die bereitgestellte HMI bestanden. Zusätzlich wurden ein separater Build
 und die Routing-/Tastentests mit `TEST_FORCE_MEDIA_NAVIGATION=false` ausgeführt:
 Die automatische MQB-/PQ-Ausgabe bleibt bei ausgeschaltetem Override erhalten.
+Die nachfolgenden Änderungen und Prüfungen sind in [TEST_NAV_CANCEL.md](TEST_NAV_CANCEL.md) dokumentiert.

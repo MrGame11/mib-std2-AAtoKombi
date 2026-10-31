@@ -140,6 +140,22 @@ BAP NEXT/PREVIOUS handling stock. `ClusterCaps.useNativeNavigation()` separates 
 from the real head-unit feature read: `TEST_FORCE_MEDIA_NAVIGATION` forces the media path while
 stock navigation listeners retain the true feature flag. See [test branch 2](TEST_MFA_UP_DOWN.md).
 
+### Experimental MQB route cancellation (second test branch)
+
+The media override now defaults to **false**, exposing native navsd on navigation-equipped units.
+The MQB `RGActDeact` shadow handles a confirmed STOP (`fid=34`, `controlType=1`) while AA owns
+native navigation output. `AndroidAutoTarget` supplies a live DSI transport guarded by registration
+and phone connection. It sends `navFocusNotification(NAVFOCUS_NATIVE, true)`, matching the stock
+VW navigation focus takeover. It does not create a VW route or synthesize a key press.
+
+`NavCancellation` waits up to five seconds for a new same-session AA status 0/2 in `/dev/shmem/aa_nav`.
+`AANavReader` feeds snapshots before its unchanged-sequence shortcut and polls completion even when
+IPC is missing or malformed. The real AA state drives the display throughout. Rerouting (3), focus
+delivery, disconnect or a new session cannot be mistaken for confirmed route termination.
+The native VW action state machine stays separate, since idle native guidance is not proof that
+the AA route stopped. PQ and media-output navigation gain no stop-menu interception.
+See [test procedure, diagnostics and exact file changes](TEST_NAV_CANCEL.md).
+
 ## Other endpoints (researched, not built)
 The same library exposes more endpoints the SAL likewise ignores:
 - `PhoneStatusEndpoint` — caller name/number/type/photo, call state, duration, signal strength.
