@@ -12,4 +12,12 @@ CP="jar/build/classes:jar/lib/MIBHMI.jar"
 rm -rf jar/build/test && mkdir -p jar/build/test
 find tests/jar -name '*.java' > jar/build/test-sources.txt
 "${JAVAC:-javac}" -nowarn -cp "$CP" -d jar/build/test @jar/build/test-sources.txt
-exec "${JAVA:-java}" -cp "jar/build/test:$CP" de.vw.mib.bap.mqbab2.navsd.functions.NavMappingTest
+"${JAVA:-java}" -Xverify:all -cp "jar/build/test:$CP" de.vw.mib.bap.mqbab2.navsd.functions.NavMappingTest
+# Firmware JXE conversions are a compile classpath, not executable desktop JVM libraries.
+# Exercise the real mod with API-only firmware stubs; keep these outside the shipped classes.
+mkdir -p jar/build/host
+"${JAVAC:-javac}" -XDignore.symbol.file -d jar/build/host tests/host/HostHmiRunner.java
+for test in de.aatokombi.MediaViewModeTest de.vw.mib.bap.mqbab2.navsd.functions.MediaViewRoutingTest; do
+    "${JAVA:-java}" -Xverify:all -cp jar/build/host HostHmiRunner \
+        jar/lib/MIBHMI.jar jar/build/classes jar/build/test "$test"
+done

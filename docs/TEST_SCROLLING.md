@@ -62,6 +62,12 @@ context (playlist, queue, station/category, or empty), not a reliable source for
 
 ## Compatibility and build
 
+The test branch also includes [MQB non-nav wheel view selection](WHEEL_VIEW_SELECTION.md).
+Choosing music during a route leaves both readers and scrollers running. Background navigation
+and title updates preserve the selected view; switching back uses the current navigation data.
+The selection does not restart a scrolling window. Ending guidance or changing the AA session
+clears the selection, so the next route begins with navigation.
+
 One JAR contains the MQB and PQ paths and selects the active stack at runtime. AID follows the MQB
 audio path; album-cover behaviour is unchanged. Build both artifacts against the target unit's
 files as usual:

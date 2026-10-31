@@ -222,6 +222,12 @@ goes through `/dev/shmem`, a RAM filesystem).
 ### 4. Verify on the unit
 - Connect your phone over Android Auto and start navigation → the cluster's media tab shows the
   maneuver + street; play music with no active route → it shows the real Title/Artist/Album.
+- On the MQB non-nav media path, NEXT/PREVIOUS from the cluster's Audio-menu controls select
+  music/navigation during AA guidance (`SHOW_NAV` and `SHOW_MEDIA` must both be enabled).
+  Repeated inputs keep the selected view; a new route starts with navigation. Separate track
+  buttons retain their normal path. PQ and native-navigation output keep their existing controls.
+  Physical button mapping and the limits of the native navigation cancellation menu are explained
+  in [`docs/WHEEL_VIEW_SELECTION.md`](docs/WHEEL_VIEW_SELECTION.md).
 - If something's off, check that `/dev/shmem/aa_nav` and `/dev/shmem/aa_media` exist and advance
   while the phone is connected (the patched libgal writes them) and the `MIBLogger` output for
   `AANavReader` / `ShmemMediaReader` lines.
@@ -231,7 +237,8 @@ The defaults just work. All build-time switches live in one file —
 `jar/src/de/aatokombi/Config.java`; flip a constant and rebuild the jar:
 - `SHOW_NAV` — draw AA turn-by-turn on the cluster (the navsd **Navigation** menu on a nav-capable
   cluster, the media widget on a non-nav one). Default on.
-- `SHOW_MEDIA` — show the real now-playing track in the media widget when not navigating. Default on.
+- `SHOW_MEDIA` — show the real now-playing track when not navigating or when selected with the
+  wheel on the MQB non-nav path. Default on.
 - `SHOW_MEDIA_PROGRESS` — add an ASCII playback progress bar to the now-playing track. Default on in
   the test branch.
   Streams without a finite duration show `LIVE`; long playback times use `h:mm:ss` and a

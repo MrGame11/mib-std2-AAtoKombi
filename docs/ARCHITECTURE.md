@@ -134,7 +134,10 @@ an unknown character draws as a box.
 ## Media now-playing (built)
 The same recipe also registers `MediaPlaybackStatusEndpoint`: the shim writes the real track to
 `/dev/shmem/aa_media` (`seq Song\tArtist\tAlbum`) and the jar shows it in the media widget when no
-route guidance is active. During guidance the route owns all four rows.
+route guidance is active. During guidance the route owns all four rows unless the user selects
+music with the Audio-menu NEXT/PREVIOUS controls on the MQB non-nav path. This requires
+`SHOW_NAV` and `SHOW_MEDIA`; separate track hardkeys retain their stock path. The native navsd
+page and PQ controls are unchanged. See [wheel selection and routing](WHEEL_VIEW_SELECTION.md).
 
 ## Other endpoints (researched, not built)
 The same library exposes more endpoints the SAL likewise ignores:
