@@ -1,5 +1,10 @@
 # AAtoKombi — Android Auto navigation on the MIB2 STD2 instrument cluster
 
+**Second test branch: `test/mfa-up-down-forced-media`.** Direct wheel UP/DOWN selects
+navigation/music, and `TEST_FORCE_MEDIA_NAVIGATION=true` routes AA to the media page even
+on navigation-equipped units. Physical key delivery still needs a vehicle test.
+See [`docs/TEST_MFA_UP_DOWN.md`](docs/TEST_MFA_UP_DOWN.md) for behaviour, diagnostics and rollback.
+
 Show Android Auto turn-by-turn navigation (and player info) on the
 instrument cluster of a **VW MIB2 STD2 / MST2** unit (TechniSat / Preh).
 
@@ -222,12 +227,11 @@ goes through `/dev/shmem`, a RAM filesystem).
 ### 4. Verify on the unit
 - Connect your phone over Android Auto and start navigation → the cluster's media tab shows the
   maneuver + street; play music with no active route → it shows the real Title/Artist/Album.
-- On the MQB non-nav media path, NEXT/PREVIOUS from the cluster's Audio-menu controls select
-  music/navigation during AA guidance (`SHOW_NAV` and `SHOW_MEDIA` must both be enabled).
-  Repeated inputs keep the selected view; a new route starts with navigation. Separate track
-  buttons retain their normal path. PQ and native-navigation output keep their existing controls.
-  Physical button mapping and the limits of the native navigation cancellation menu are explained
-  in [`docs/WHEEL_VIEW_SELECTION.md`](docs/WHEEL_VIEW_SELECTION.md).
+- In this second test branch, direct DSI `KEY_MFW_UP` selects navigation and `KEY_MFW_DOWN`
+  selects music while AA audio and guidance are active. A new route starts with navigation.
+  The first test branch's BAP NEXT/PREVIOUS interception has been removed. This requires the
+  cluster to forward the UP/DOWN events to the head unit; see the vehicle test and logging steps
+  in [`docs/TEST_MFA_UP_DOWN.md`](docs/TEST_MFA_UP_DOWN.md).
 - If something's off, check that `/dev/shmem/aa_nav` and `/dev/shmem/aa_media` exist and advance
   while the phone is connected (the patched libgal writes them) and the `MIBLogger` output for
   `AANavReader` / `ShmemMediaReader` lines.
@@ -238,7 +242,13 @@ The defaults just work. All build-time switches live in one file —
 - `SHOW_NAV` — draw AA turn-by-turn on the cluster (the navsd **Navigation** menu on a nav-capable
   cluster, the media widget on a non-nav one). Default on.
 - `SHOW_MEDIA` — show the real now-playing track when not navigating or when selected with the
-  wheel on the MQB non-nav path. Default on.
+  wheel on the media output path. Default on.
+- `MFA_UP_DOWN_SWITCH` — observe direct wheel UP/DOWN for view selection. Default on here.
+- `TEST_FORCE_MEDIA_NAVIGATION` — force AA navigation onto the media page on MQB/PQ, including
+  navigation-equipped units. Default on **only in this second test branch**. Set false and rebuild
+  to restore automatic output routing; no vehicle coding is changed.
+- `TEST_LOG_MFA_KEYS` — bounded numeric wheel-event log in `/dev/shmem/aatokombi_keys.log`.
+  Default on here; useful for confirming which physical keys reach the head unit.
 - `SHOW_MEDIA_PROGRESS` — add an ASCII playback progress bar to the now-playing track. Default on in
   the test branch.
   Streams without a finite duration show `LIVE`; long playback times use `h:mm:ss` and a

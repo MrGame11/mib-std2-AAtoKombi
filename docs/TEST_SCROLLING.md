@@ -1,6 +1,7 @@
 # Scrolling / live-progress test branch
 
-This document describes `test/scrolling-live-progress`. The feature choices remain compile-time
+This document describes the scrolling features shared by `test/scrolling-live-progress` and
+`test/mfa-up-down-forced-media`. The feature choices remain compile-time
 settings: edit `jar/src/de/aatokombi/Config.java`, then use the normal PC/Docker build. No runtime
 configuration file or Toolbox settings screen is added by this branch.
 
@@ -62,7 +63,8 @@ context (playlist, queue, station/category, or empty), not a reliable source for
 
 ## Compatibility and build
 
-The test branch also includes [MQB non-nav wheel view selection](WHEEL_VIEW_SELECTION.md).
+The first test branch includes [MQB non-nav wheel view selection](WHEEL_VIEW_SELECTION.md).
+This second branch replaces that input with [direct UP/DOWN and forced media output](TEST_MFA_UP_DOWN.md).
 Choosing music during a route leaves both readers and scrollers running. Background navigation
 and title updates preserve the selected view; switching back uses the current navigation data.
 The selection does not restart a scrolling window. Ending guidance or changing the AA session

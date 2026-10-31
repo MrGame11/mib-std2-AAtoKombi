@@ -12,10 +12,10 @@ public final class MediaViewMode {
 
     public static synchronized boolean showNavigation() { return !music; }
 
-    /** Direction selects a view rather than toggling on every repeated wheel event. */
-    public static synchronized boolean select(int control, int list, int count) {
-        if (!active || list != 0 || count < 1 || (control != 1 && control != 2)) return false;
-        music = control == 1;
+    /** A confirmed direct UP/DOWN event selects a view. BAP NEXT/PREVIOUS are not inputs here. */
+    public static synchronized boolean selectUpDown(boolean down) {
+        if (!active) return false;
+        music = down;
         return true;
     }
 

@@ -281,10 +281,7 @@ public final class AANavReader implements Runnable {
     // Nav-capable for the active stack. PQ (PQ audiosd shadow live): the mqbpq navsd functions are
     // built only on a nav-coded PQ unit, so their existence IS the signal. MQB: ClusterCaps.
     private boolean navCapable() {
-        if (de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()) {
-            return de.vw.mib.bap.mqbpq.navsd.functions.ManeuverDescriptor.isActive();
-        }
-        return ClusterCaps.isNavCapable();
+        return ClusterCaps.useNativeNavigation();
     }
 
     /**

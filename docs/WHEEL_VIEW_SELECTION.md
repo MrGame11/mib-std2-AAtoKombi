@@ -1,5 +1,9 @@
 # Musik/Navigation über die Lenkradbedienung
 
+**Referenz für den ersten Testbranch `test/scrolling-live-progress` (Stand `40e0d89`).**
+Im zweiten Testbranch ist die hier beschriebene BAP-NEXT/PREVIOUS-Umschaltung entfernt.
+Dessen direkte Auf-/Ab-Anbindung und Testschalter stehen in [TEST_MFA_UP_DOWN.md](TEST_MFA_UP_DOWN.md).
+
 Diese Testbranch-Erweiterung übernimmt Commit
 `4e7c440f2299cfadb81d0de8d500e02c60e8c894` und ergänzt die bestehenden Lauftext- und
 LIVE-Funktionen. Sie betrifft den **MQB-Pfad mit AA-Navigation auf der Medienseite**.

@@ -405,7 +405,7 @@ ExboxServiceListener {
         try {
             if (Config.SHOW_NAV
                     && connType == 3
-                    && !de.vw.mib.bap.mqbab2.navsd.functions.ClusterCaps.isNavCapable()
+                    && !de.vw.mib.bap.mqbab2.navsd.functions.ClusterCaps.useNativeNavigation()
                     && de.aatokombi.MediaViewMode.showNavigation()
                     && de.vw.mib.asl.internal.androidauto.target.NavigationHandler.aaRouteGuidanceActive
                     && navPrimary != null && navPrimary.length() > 0) {

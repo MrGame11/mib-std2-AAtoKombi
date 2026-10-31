@@ -449,6 +449,7 @@ implements TimerNotifier {
 
             if (Config.SHOW_NAV
                     && connType == 3
+                    && de.aatokombi.MediaViewMode.showNavigation()
                     && NavigationHandler.aaRouteGuidanceActive
                     && navPrimary != null && navPrimary.length() > 0) {
                 // 3 lines: arrow+distance / street (replaced by the lane row of the junction ahead

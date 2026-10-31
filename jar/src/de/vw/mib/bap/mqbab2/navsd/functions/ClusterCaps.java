@@ -2,6 +2,7 @@ package de.vw.mib.bap.mqbab2.navsd.functions;
 
 import de.vw.mib.bap.mqbab2.common.api.APIFactory;
 import de.vw.mib.bap.mqbab2.common.api.configuration.ConfigurationService;
+import de.aatokombi.Config;
 
 /**
  * Runtime detection of whether THIS head unit has its navigation feature selected, so one build
@@ -27,6 +28,15 @@ public final class ClusterCaps {
     private static final int NAV = 1;
     private static final int NON_NAV = 2;
     private static volatile int _state = UNKNOWN;
+
+    /** AA output routing only. Keep isNavCapable() truthful for the stock navigation listeners. */
+    public static boolean useNativeNavigation() {
+        if (Config.TEST_FORCE_MEDIA_NAVIGATION) return false;
+        if (de.vw.mib.bap.mqbpq.audiosd.functions.CurrentStationInfo.isActive()) {
+            return de.vw.mib.bap.mqbpq.navsd.functions.ManeuverDescriptor.isActive();
+        }
+        return isNavCapable();
+    }
 
     /** Head-unit navigation feature selected. Cached after first successful configuration read. */
     public static boolean isNavCapable() {

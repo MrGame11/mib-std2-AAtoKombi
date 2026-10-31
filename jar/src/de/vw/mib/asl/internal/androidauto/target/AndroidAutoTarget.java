@@ -67,6 +67,7 @@ public class AndroidAutoTarget
     private /*final*/ String _classname;
     private ASLAndroidAutoExBoxServiceImpl apiImpl;
     private NavigationHandler navigationHandler;
+    private de.aatokombi.MfaViewKeys mfaViewKeys;
     // NOTE: the MST2 jxe->jar decompile corrupted these large int constants (jxe2jar artifact).
     // The framework runtime expects target id 1590002 (== the repo/MHI2 value), confirming the
     // VW ASL framework uses the same constants on MST2 as on MHI2. Use the repo values.
@@ -124,6 +125,8 @@ public class AndroidAutoTarget
         ExboxGuidanceManager exboxGuidanceManager = ASLExboxmFactory.getExboxmApi().getExboxGuidanceManager();
         this.exboxGuidanceListenerImpl = new ExboxGuidanceListenerImpl(this.navigationListener, exboxGuidanceManager);
         this.navigationHandler = new NavigationHandler();
+        if (Config.MFA_UP_DOWN_SWITCH) this.mfaViewKeys = new de.aatokombi.MfaViewKeys(this);
+        MIBLogger.getInstance().info("AA media-output test=" + Config.TEST_FORCE_MEDIA_NAVIGATION);
         // AAtoKombi: feed AA nav from the patched GAL lib via /dev/shmem/aa_nav (replaces the stubbed
         // DSIAndroidAuto2 nav path). A single AANavReader parses the file once and routes the maneuver
         // by runtime cluster type (ClusterCaps): the navsd Navigation menu on a nav-capable cluster,
@@ -212,6 +215,7 @@ public class AndroidAutoTarget
         }
         DSIProxyFactory.getDSIProxyAPI().getDSIProxy().addServiceStateListener(class$org$dsi$ifc$androidauto2$DSIAndroidAuto2 == null ? (class$org$dsi$ifc$androidauto2$DSIAndroidAuto2 = AndroidAutoTarget.class$("org.dsi.ifc.androidauto2.DSIAndroidAuto2")) : class$org$dsi$ifc$androidauto2$DSIAndroidAuto2, this);
         this.addObservers(this.OBSERVED_EVENTS);
+        if (this.mfaViewKeys != null) this.mfaViewKeys.start();
         this.targetStarted = true;
         serviceReferenceArray = ServiceManager.bundleContext.getServiceReferences((class$de$vw$mib$threads$AsyncServiceFactory == null ? (class$de$vw$mib$threads$AsyncServiceFactory = AndroidAutoTarget.class$("de.vw.mib.threads.AsyncServiceFactory")) : class$de$vw$mib$threads$AsyncServiceFactory).getName(), "(MIBThreadId=3)");
         AsyncServiceFactory asyncServiceFactory = (AsyncServiceFactory) ServiceManager.bundleContext.getService(serviceReferenceArray[0]);
@@ -222,6 +226,7 @@ public class AndroidAutoTarget
     }
 
     public void shutdown() {
+        if (this.mfaViewKeys != null) this.mfaViewKeys.stop();
         if (this.isTraceEnabled()) {
             this.trace().append("AndroidAutoTarget").append(".shutdown()").log();
         }

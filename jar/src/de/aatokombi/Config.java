@@ -27,6 +27,15 @@ public final class Config {
      */
     public static final boolean SHOW_MEDIA = true;
 
+    /** Second test branch: direct DSI KEY_MFW_UP/DOWN select navigation/music. */
+    public static final boolean MFA_UP_DOWN_SWITCH = true;
+
+    /** Test only: route AA navigation to the media page, even on a navigation-equipped unit. */
+    public static final boolean TEST_FORCE_MEDIA_NAVIGATION = true;
+
+    /** Bounded numeric key diagnostics in /dev/shmem/aatokombi_keys.log (no media/phone data). */
+    public static final boolean TEST_LOG_MFA_KEYS = true;
+
     /**
      * Add a 4th line with an ASCII playback progress bar + elapsed/total time (e.g.
      * "1:23 ----|----- 3:45") to the now-playing track widget. The cluster has NO graphical media
