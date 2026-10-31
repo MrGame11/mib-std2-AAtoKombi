@@ -13,6 +13,7 @@ shim/lib/*.so
 
 # distribution outputs — patched firmware binary must never be published; built locally
 dist/
+output/
 
 # extracted/decompiled stock classes from MIBHMI.jar
 jar/reference/

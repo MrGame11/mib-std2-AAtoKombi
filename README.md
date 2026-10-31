@@ -142,6 +142,7 @@ docs/     ARCHITECTURE.md          — the design + notes
           NAVIGATION_VIA_NAVSD.md  — the nav-capable (navsd Navigation-menu) output path
 
 build.sh          one-button build of BOTH artifacts from the toolbox dumps (all in Docker)
+build.bat / .ps1   Windows launcher with file selection (Docker Desktop, Linux containers)
 docker/           the build toolchain image (JDK 8 + clang + lld + pyelftools)
 tools/            optional firmware-extraction / shadow-verification helpers
 ```
@@ -187,7 +188,22 @@ Use the toolbox's **"Dump files"** menu item to copy these from the unit to your
 ```
 Everything runs in Docker: it converts the `.jxe` to a jar, builds the toolchain image (cached
 after the first run), compiles both artifacts inside the container with the repo bind-mounted, and
-drops the two deployables in `dist/`. It adapts to your firmware automatically (the libgal patch
+drops the two deployables in `dist/`.
+
+On Windows, start Docker Desktop with **Linux containers** and double-click `build.bat`.
+Select `MIBHMI.jxe` and the stock `libext.google.gal.receiver.so` in the two file dialogs.
+The launcher builds both artifacts and opens `dist` when finished. You can also drop both
+input files onto `build.bat` (in either order), or pass paths from PowerShell:
+```powershell
+.\build.bat "C:\MIB dump\MIBHMI.jxe" "C:\MIB dump\libext.google.gal.receiver.so"
+```
+An optional third argument selects the output folder. No Git Bash, host Python or host JDK
+is needed; Docker Desktop may itself use its WSL 2 backend. The console stays open so errors
+remain visible. All options, including scrolling and `LIVE`, still come from
+`jar/src/de/aatokombi/Config.java`. Details and import notes:
+[`docs/WINDOWS_BUILD.md`](docs/WINDOWS_BUILD.md).
+
+The build adapts to your firmware automatically (the libgal patch
 resolves its per-build addresses from the file you pass, and the jar is rebuilt against your unit's
 `MIBHMI.jar`).
 
